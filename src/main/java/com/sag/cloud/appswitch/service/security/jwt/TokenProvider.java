@@ -14,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
+import com.sag.cloud.appswitch.service.web.rest.vm.UserInfo;
 
 import io.jsonwebtoken.*;
 
@@ -64,6 +65,40 @@ public class TokenProvider {
             .setSubject(authentication.getName())
             .claim(AUTHORITIES_KEY, authorities)
             .signWith(SignatureAlgorithm.HS512, secretKey)
+            .setExpiration(validity)
+            .compact();
+    }
+
+    public String createTokenService(UserInfo userInfo, boolean rememberMe) {
+//        String authorities = userInfo.getAuthorities().stream()
+//            .map(GrantedAuthority::getAuthority)
+//            .collect(Collectors.joining(","));
+
+        String authorities = "";
+
+
+        //At present hardcoded
+        switch (userInfo.getUsername()) {
+            case "admin":
+                authorities = "ROLE_ADMIN,ROLE_USER";
+                break;
+            case "user":
+                authorities = "ROLE_USER";
+                break;
+        }
+
+        long now = (new Date()).getTime();
+        Date validity;
+        if (rememberMe) {
+            validity = new Date(now + this.tokenValidityInMillisecondsForRememberMe);
+        } else {
+            validity = new Date(now + this.tokenValidityInMilliseconds);
+        }
+
+        return Jwts.builder()
+            .setSubject(userInfo.getUsername())
+            .claim(AUTHORITIES_KEY, authorities)
+            .signWith(SignatureAlgorithm.HS512, "my-secret-token-to-change-in-production")
             .setExpiration(validity)
             .compact();
     }

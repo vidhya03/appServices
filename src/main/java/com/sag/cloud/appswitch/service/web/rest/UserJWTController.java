@@ -7,6 +7,7 @@ import com.sag.cloud.appswitch.service.web.rest.vm.LoginVM;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.sag.cloud.appswitch.service.web.rest.vm.UserInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,24 @@ public class UserJWTController {
         httpHeaders.add(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
         return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
     }
+
+
+    @PostMapping("/generate")
+    @Timed
+    public ResponseEntity<JWTToken> generateToken(@Valid @RequestBody UserInfo userInfo) {
+
+//        UsernamePasswordAuthenticationToken authenticationToken =
+//            new UsernamePasswordAuthenticationToken(userInfo.getUsername(), userInfo.getPassword());
+
+//        Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        boolean rememberMe = (userInfo.isRememberMe() == null) ? false : userInfo.isRememberMe();
+        String jwt = tokenProvider.createTokenService(userInfo, true);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
+        return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
+    }
+
 
     /**
      * Object to return as body in JWT Authentication.
