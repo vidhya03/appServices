@@ -99,6 +99,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/activate").permitAll()
             .antMatchers("/api/authenticate").permitAll()
             .antMatchers("/api/generate").permitAll()
+            .antMatchers("/api/keycloak/account").permitAll()
+            .antMatchers("/api/keycloak/authenticate").permitAll()
             .antMatchers("/api/account/reset-password/init").permitAll()
             .antMatchers("/api/account/reset-password/finish").permitAll()
             .antMatchers("/api/profile-info").permitAll()

@@ -36,4 +36,7 @@ export class LoginService {
         this.authServerProvider.logout().subscribe();
         this.principal.authenticate(null);
     }
+    getToken() {
+        return this.authServerProvider.getToken();
+    }
 }

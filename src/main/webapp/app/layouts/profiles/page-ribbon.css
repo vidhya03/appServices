@@ -2,7 +2,7 @@
 Developement Ribbon
 ========================================================================== */
 .ribbon {
-    background-color: rgba(170, 0, 0, 0.5);
+    background-color: rgba(117, 192, 236, 0.5);
     left: -3.5em;
     moz-transform: rotate(-45deg);
     ms-transform: rotate(-45deg);

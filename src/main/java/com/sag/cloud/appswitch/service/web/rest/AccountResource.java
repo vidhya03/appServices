@@ -16,6 +16,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -102,11 +104,65 @@ public class AccountResource {
     @GetMapping("/account")
     @Timed
     public UserDTO getAccount() {
-        return userService.getUserWithAuthorities()
-            .map(UserDTO::new)
-            .orElseThrow(() -> new InternalServerErrorException("User could not be found"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDTO user = (UserDTO) authentication.getPrincipal();
+        return  user;
+//        userDTO.setId();
+//        return userService.getUserWithAuthorities()
+//            .map(UserDTO::new)
+//            .orElseThrow(() -> new InternalServerErrorException("User could not be found"));
     }
 
+    /**
+     *
+     * user dto for internal
+      {
+     "id" : 4,
+     "login" : "user",
+     "firstName" : "User",
+     "lastName" : "User",
+     "email" : "user@localhost",
+     "imageUrl" : "",
+     "activated" : true,
+     "langKey" : "en",
+     "createdBy" : "system",
+     "createdDate" : "2018-06-13T10:21:21.968Z",
+     "lastModifiedBy" : "system",
+     "lastModifiedDate" : null,
+     "authorities" : [ "ROLE_USER" ]
+     }
+     * @return
+     */
+    @GetMapping("/keycloak/account")
+    public UserDTO getKeyCloakAccount(){
+
+        UserDTO userDTO = new UserDTO();
+        /**
+          {
+         "sub": "347e82fe-f145-4b8e-ba56-35ae4c71b3ee",
+         "roles": [
+         "offline_access",
+         "uma_authorization",
+         "ROLE_USER"
+         ],
+         "name": "User",
+         "preferred_username": "user",
+         "given_name": "",
+         "family_name": "User",
+         "email": "user@localhost"
+         }
+         */
+
+
+        userDTO.setId(1l);
+
+        userDTO.setFirstName("name");
+        userDTO.setEmail("user@localhost");
+        userDTO.setActivated(true);
+        userDTO.setLangKey("en");
+        userDTO.setAuthorities(new HashSet<>(Arrays.asList("ROLE_USER")));
+        return userDTO;
+    }
     /**
      * POST  /account : update the current user information.
      *

@@ -29,7 +29,9 @@ public class JWTFilter extends GenericFilterBean {
         throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String jwt = resolveToken(httpServletRequest);
-        if (StringUtils.hasText(jwt) && this.tokenProvider.validateToken(jwt)) {
+        //TODO: keycloak - proxied
+//        if (StringUtils.hasText(jwt) && this.tokenProvider.validateToken(jwt)) {
+        if (StringUtils.hasText(jwt) ) {
             Authentication authentication = this.tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
